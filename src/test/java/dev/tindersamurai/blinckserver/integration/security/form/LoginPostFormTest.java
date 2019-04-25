@@ -73,11 +73,15 @@ public class LoginPostFormTest extends BlinckIntegrationTest {
 		String name = environment.getProperty("blinck.security.default.admin.name");
 		String pass = environment.getProperty("blinck.security.default.admin.password");
 
+		System.out.println("N: " + name);
+		System.out.println("P: " + pass);
+
 		ResponseEntity entity = fastPostRequest(
 				ADMIN_LOGIN_ENDPOINT, new JsonForm.AdminLoginPost(name, pass)
 		);
 
 		responseEntityStatusErrorAssertion(entity);
+		System.out.println("STATUS: " + entity.getStatusCode().is2xxSuccessful());
 		assert entity.getStatusCode().is2xxSuccessful();
 	}
 

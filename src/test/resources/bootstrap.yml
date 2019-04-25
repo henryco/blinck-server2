@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: dev-test
+  application:
+    name: blinck-backend
+  cloud:
+    consul:
+      host: 174.138.0.194
+      port: 8500
+      discovery:
+        tags: dev-test
+        enabled: false
+      config:
+        enabled: true
+        prefix: blinck
+        defaultContext: blinck-backend
+        data-key: properties
+        profileSeparator: '::'
+        format: yaml
