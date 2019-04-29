@@ -72,6 +72,7 @@ import static org.springframework.http.HttpMethod.GET;
 		return http.authorizeRequests()
 				.antMatchers("/", "/rest/public/**", "/login/**").permitAll()
 				.antMatchers(GET, "/session/**", "/health", DATA_PATH_URL + "**").permitAll()
+				.antMatchers("/actuator/health").permitAll()
 				.anyRequest().authenticated()
 		.and();
 	}
