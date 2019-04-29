@@ -36,9 +36,6 @@ import static org.springframework.http.HttpMethod.GET;
 	private final UserDetailsService userDetailsService;
 	private final AuthenticationManager facebookAuthManager;
 
-	private @Value("${blinck.security.default.admin.name}") String admin_name;
-	private @Value("${blinck.security.default.admin.password}") String admin_pass;
-
 
 	@Autowired
 	public WebSecurityConfiguration(
@@ -74,7 +71,7 @@ import static org.springframework.http.HttpMethod.GET;
 
 	private HttpSecurity authorizeRequests(HttpSecurity http) throws Exception {
 		return http.authorizeRequests()
-				.antMatchers("/", "/public/**", "/login/**").permitAll()
+				.antMatchers("/", "/rest/public/**", "/login/**").permitAll()
 				.antMatchers(GET, "/session/**", "/health", DATA_PATH_URL + "**").permitAll()
 				.anyRequest().authenticated()
 		.and();
