@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import dev.tindersamurai.blinckserver.security.token.processor.TokenAuthenticationProcessor;
-import dev.tindersamurai.blinckserver.util.test.BlinckTestName;
+import lombok.val;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 /**
  * @author Henry on 23/08/17.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class TokenAuthenticationService {
 
 
@@ -69,7 +68,7 @@ public abstract class TokenAuthenticationService {
 
 		Stream<String> stream = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority);
 
-		String JWT = createAuthenticationToken(auth.getName(), stream.toArray(String[]::new));
+		val JWT = createAuthenticationToken(auth.getName(), stream.toArray(String[]::new));
 		res.addHeader(getTokenHeader(), getTokenPrefix() + " " + JWT);
 
 		if (getProcessor() != null) getProcessor().addAuthentication(auth);
@@ -86,9 +85,8 @@ public abstract class TokenAuthenticationService {
 	public final Authentication getAuthentication(String jsonWebToken) {
 
 		try {
-			TokenPayload payload = readAuthenticationToken(jsonWebToken);
-
-			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+			val payload = readAuthenticationToken(jsonWebToken);
+			val auth = new UsernamePasswordAuthenticationToken(
 					payload.username,
 					null,
 					grantAuthorities(payload.authorities)
@@ -104,11 +102,10 @@ public abstract class TokenAuthenticationService {
 
 
 
-	@BlinckTestName("createAuthenticationToken")
 	private String createAuthenticationToken(String username, String ... authorities) {
 
 		try {
-			final TokenPayload payload = new TokenPayload(username, authorities);
+			val payload = new TokenPayload(username, authorities);
 			return parseTo(new ObjectMapper().writeValueAsString(payload));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
@@ -117,7 +114,6 @@ public abstract class TokenAuthenticationService {
 	}
 
 
-	@BlinckTestName("readAuthenticationToken")
 	private TokenPayload readAuthenticationToken(String token) {
 		try {
 			return new ObjectMapper().readValue(parseFrom(token), TokenPayload.class);
@@ -128,7 +124,6 @@ public abstract class TokenAuthenticationService {
 	}
 
 
-	@BlinckTestName("parseTo")
 	private String parseTo(String payload) {
 		return Jwts.builder()
 				.setSubject(payload)
@@ -138,7 +133,6 @@ public abstract class TokenAuthenticationService {
 	}
 
 
-	@BlinckTestName("parseFrom")
 	private String parseFrom(String token) {
 		if (token == null) return null;
 
@@ -149,7 +143,6 @@ public abstract class TokenAuthenticationService {
 	}
 
 
-	@BlinckTestName("grantAuthorities")
 	private Collection<? extends GrantedAuthority> grantAuthorities(String ... authorities) {
 
 		try {
@@ -161,7 +154,6 @@ public abstract class TokenAuthenticationService {
 	}
 
 
-	@BlinckTestName("grantDefaultAuthorities")
 	private Collection<? extends GrantedAuthority> defaultAuthorities() {
 		return Collections.singletonList(new SimpleGrantedAuthority(getDefaultRole()));
 	}

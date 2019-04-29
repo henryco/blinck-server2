@@ -1,7 +1,6 @@
 package dev.tindersamurai.blinckserver.configuration.spring;
 
 import dev.tindersamurai.blinckserver.security.auth.FacebookAuthManager;
-import dev.tindersamurai.blinckserver.security.credentials.AdminCredentials;
 import dev.tindersamurai.blinckserver.security.credentials.FacebookCredentials;
 import dev.tindersamurai.blinckserver.security.filter.ResetFilter;
 import dev.tindersamurai.blinckserver.security.filter.jwt.JWTAuthFilter;
@@ -21,7 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static dev.tindersamurai.blinckserver.configuration.spring.WebMvcConfiguration.DATA_PATH_URL;
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
 
 /**
  * @author Henry on 21/08/17.
@@ -33,9 +31,7 @@ import static org.springframework.http.HttpMethod.POST;
 		FacebookAuthManager.class
 }) public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-
 	private final TokenAuthenticationService userTokenAuthService;
-	private final TokenAuthenticationService adminTokenAuthService;
 
 	private final UserDetailsService userDetailsService;
 	private final AuthenticationManager facebookAuthManager;
@@ -45,38 +41,30 @@ import static org.springframework.http.HttpMethod.POST;
 
 
 	@Autowired
-	public WebSecurityConfiguration(@Qualifier("profileDetailsServiceAdmin") UserDetailsService userDetailsService,
-									@Qualifier("facebookAuthManager") AuthenticationManager facebookAuthManager,
-									@Qualifier("UserTokenAuthService") TokenAuthenticationService userTokenAuthService,
-									@Qualifier("AdminTokenAuthService") TokenAuthenticationService adminTokenAuthService
+	public WebSecurityConfiguration(
+			@Qualifier("blinckDetailsService") UserDetailsService userDetailsService,
+			@Qualifier("facebookAuthManager") AuthenticationManager facebookAuthManager,
+			@Qualifier("UserTokenAuthService") TokenAuthenticationService userTokenAuthService
 	) {
 		this.userDetailsService = userDetailsService;
 		this.facebookAuthManager = facebookAuthManager;
 		this.userTokenAuthService = userTokenAuthService;
-		this.adminTokenAuthService = adminTokenAuthService;
 	}
 
 
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService)
-				.and()
-				.inMemoryAuthentication()
-				.withUser(admin_name)
-				.password(admin_pass)
-		.roles("MODERATOR", "ADMIN", "USER");
+		auth.userDetailsService(userDetailsService);
 	}
 
 
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
 		HttpSecurity httpSecurity = http.csrf().disable();
 		httpSecurity = authorizeRequests(httpSecurity);
 		httpSecurity = filterUserLoginRequest(httpSecurity);
-		httpSecurity = filterAdminLoginRequest(httpSecurity);
 		filterJwtHeader(httpSecurity);
 	}
 
@@ -86,9 +74,8 @@ import static org.springframework.http.HttpMethod.POST;
 
 	private HttpSecurity authorizeRequests(HttpSecurity http) throws Exception {
 		return http.authorizeRequests()
-				.antMatchers("/", "/public/**", "/login/**", "/health", DATA_PATH_URL + "**").permitAll()
-				.antMatchers(GET, "/session/**").permitAll()
-				.antMatchers(POST,"/protected/admin/registration").permitAll()
+				.antMatchers("/", "/public/**", "/login/**").permitAll()
+				.antMatchers(GET, "/session/**", "/health", DATA_PATH_URL + "**").permitAll()
 				.anyRequest().authenticated()
 		.and();
 	}
@@ -105,37 +92,15 @@ import static org.springframework.http.HttpMethod.POST;
 		);
 	}
 
-
-	private HttpSecurity filterAdminLoginRequest(HttpSecurity http) throws Exception {
-		return http.addFilterBefore( // We filter the api/ ADMIN login requests
-				new JWTLoginFilter(
-						"/login/admin/**",
-						authenticationManager(),
-						adminTokenAuthService,
-						AdminCredentials.class
-				), UsernamePasswordAuthenticationFilter.class
-		);
-	}
-
-
 	private HttpSecurity filterJwtHeader(HttpSecurity http) {
-
 		return http
 				.addFilterBefore(
 						new ResetFilter(),
 						UsernamePasswordAuthenticationFilter.class
 				)
-
 				.addFilterBefore(
 						new JWTAuthFilter(userTokenAuthService),
 						UsernamePasswordAuthenticationFilter.class
-				)
-
-				.addFilterBefore(
-						new JWTAuthFilter(
-								"/protected/admin/**",
-								adminTokenAuthService
-						), UsernamePasswordAuthenticationFilter.class
 				)
 		;
 	}

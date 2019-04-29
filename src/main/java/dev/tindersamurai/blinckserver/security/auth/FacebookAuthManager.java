@@ -1,6 +1,7 @@
 package dev.tindersamurai.blinckserver.security.auth;
 
-import dev.tindersamurai.blinckserver.mvc.service.data.UserDataService;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,7 @@ import java.util.Collections;
 /**
  * @author Henry on 23/08/17.
  */
-@Component
+@Component @Slf4j
 public class FacebookAuthManager implements AuthenticationManager {
 
 	private static final String[] FACEBOOK_PERMISSIONS = {
@@ -35,19 +36,21 @@ public class FacebookAuthManager implements AuthenticationManager {
 			"last_name", "middle_name", "locale", "location", "email"
 	};
 
-	private @Value("blinck.facebook.app.id") String app_id;
 	private @Value("blinck.facebook.app.secret") String app_secret;
+	private @Value("blinck.facebook.app.id") String app_id;
 
+	private final FacebookProfileService facebookProfileService;
 	private final UserDetailsService detailsService;
-	private final UserDataService userDataService;
 
 
 	@Autowired
-	public FacebookAuthManager(@Qualifier("profileDetailsServiceUser")
-									   UserDetailsService detailsService,
-							   UserDataService userDataService) {
+	public FacebookAuthManager(
+			@Qualifier("blinckDetailsService")
+					UserDetailsService detailsService,
+			FacebookProfileService facebookProfileService
+	) {
+		this.facebookProfileService = facebookProfileService;
 		this.detailsService = detailsService;
-		this.userDataService = userDataService;
 	}
 
 
@@ -55,16 +58,16 @@ public class FacebookAuthManager implements AuthenticationManager {
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
 
-		Object facebook_uid = authentication.getPrincipal();
-		Object facebook_token = authentication.getCredentials();
+		val facebook_uid = authentication.getPrincipal();
+		val facebook_token = authentication.getCredentials();
 
-		FacebookConnectionFactory factory = new FacebookConnectionFactory(app_id, app_secret);
+		val factory = new FacebookConnectionFactory(app_id, app_secret);
 		Connection<Facebook> connection = factory.createConnection(new AccessGrant(facebook_token.toString()));
-		Facebook facebook = connection.getApi();
+		val facebook = connection.getApi();
 		checkFacebook(facebook);
 
 
-		UserDetails userDetails = loadDetails(facebook, facebook_uid.toString());
+		val userDetails = loadDetails(facebook, facebook_uid.toString());
 		checkDetails(userDetails);
 
 		return new UsernamePasswordAuthenticationToken(
@@ -77,14 +80,16 @@ public class FacebookAuthManager implements AuthenticationManager {
 
 	private UserDetails loadDetails(Facebook facebook, String uid) {
 
-		User userProfile = facebook.fetchObject("me", User.class, FACEBOOK_PERMISSIONS);
+		val userProfile = facebook.fetchObject("me", User.class, FACEBOOK_PERMISSIONS);
 		checkProfile(userProfile, uid);
 
 		try {
-			return detailsService.loadUserByUsername(userProfile.getId());
+			val userId = facebookProfileService.getUserIdFromFacebook(userProfile);
+			log.info("FOUND USER BY FB_ID: {}", userId);
+			return detailsService.loadUserByUsername(Long.toString(userId));
 		} catch (UsernameNotFoundException e) {
-			userDataService.addNewFacebookUser(facebook, userProfile);
-			return detailsService.loadUserByUsername(userProfile.getId());
+			val id = facebookProfileService.addNewFacebookUser(facebook, userProfile);
+			return detailsService.loadUserByUsername(Long.toString(id));
 		}
 	}
 

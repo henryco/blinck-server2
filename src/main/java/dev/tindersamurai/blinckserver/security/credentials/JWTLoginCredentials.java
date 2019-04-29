@@ -9,9 +9,7 @@ import java.util.Collections;
 /**
  * @author Henry on 24/08/17.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class JWTLoginCredentials implements Serializable {
-
 
 	public Object getPrincipal() {
 		return null;

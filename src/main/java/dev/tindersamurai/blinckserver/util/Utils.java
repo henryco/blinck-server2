@@ -13,7 +13,7 @@ import java.util.Arrays;
 /**
  * @author Henry on 17/06/17.
  */
-public abstract class Utils {
+public final class Utils {
 
 	public static String arrayToString(String[] array) {
 		return Arrays.toString(array);
@@ -71,7 +71,7 @@ public abstract class Utils {
 
 			final String userHash = Integer.toString(Math.abs(userName.hashCode()));
 			final String time = Long.toString(System.nanoTime());
-			final String name = Math.abs(Arrays.hashCode(file)) + userHash + time + "."+type;
+			final String name = Math.abs(Arrays.hashCode(file)) + userHash + time + "." + type;
 
 			File upFile = new File(upload_path);
 			if (!upFile.exists())

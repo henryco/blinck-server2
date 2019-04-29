@@ -7,8 +7,7 @@ import org.springframework.security.core.Authentication;
  */
 public interface TokenAuthenticationProcessor {
 
-
 	void addAuthentication(Authentication authentication);
-	Authentication processAuthentication(Authentication authentication);
 
+	Authentication processAuthentication(Authentication authentication);
 }

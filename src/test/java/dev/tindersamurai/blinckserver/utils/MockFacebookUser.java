@@ -1,6 +1,5 @@
 package dev.tindersamurai.blinckserver.utils;
 
-import dev.tindersamurai.blinckserver.util.test.BlinckTestName;
 import org.springframework.social.facebook.api.User;
 
 import java.lang.reflect.Field;
@@ -118,7 +117,6 @@ public final class MockFacebookUser {
 //	}
 
 
-	@BlinckTestName("createNewRandomId")
 	private String createNewRandomId() {
 
 		while (true) {

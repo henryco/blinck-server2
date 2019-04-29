@@ -2,7 +2,7 @@ package dev.tindersamurai.blinckserver.configuration.spring;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
 
@@ -12,7 +12,7 @@ import static java.io.File.separator;
  * @author Henry on 23/08/17.
  */
 @Configuration
-public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
+public class WebMvcConfiguration implements WebMvcConfigurer {
 
 	public static final String REL_FILE_PATH = System.getProperty("user.dir");
 	public static final String ABS_FILE_PATH = System.getProperty("user.home");

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import dev.tindersamurai.blinckserver.configuration.project.websocket.WebSocketConstants;
-import dev.tindersamurai.blinckserver.mvc.model.entity.infrastructure.UpdateNotification;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -69,14 +68,6 @@ public interface BlinckNotification {
 		private String type;
 		private String info;
 		private Date timestamp;
-
-		public JsonNotificationForm(UpdateNotification notification) {
-			this.id = notification.getId();
-			this.type = notification.getDetails().getType();
-			this.info = notification.getDetails().getNotification();
-			this.timestamp = notification.getDate();
-		}
-
 	}
 
 

@@ -3,6 +3,7 @@ package dev.tindersamurai.blinckserver.security.filter.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.tindersamurai.blinckserver.security.credentials.JWTLoginCredentials;
 import dev.tindersamurai.blinckserver.security.token.service.TokenAuthenticationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import java.io.IOException;
 /**
  * @author Henry on 22/08/17.
  */
+@Slf4j
 public final class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
 
@@ -41,10 +43,15 @@ public final class JWTLoginFilter extends AbstractAuthenticationProcessingFilter
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest req,
 												HttpServletResponse res)
-			throws AuthenticationException, IOException, ServletException {
+			throws AuthenticationException, IOException {
 
 		JWTLoginCredentials credentials = new ObjectMapper()
 				.readValue(req.getInputStream(), loginCredentialsClass);
+
+		log.info("JWT: REQUEST: {}", req);
+		log.info("JWT: PRINCIPAL: {}", credentials.getPrincipal());
+		log.info("JWT: CREDENTIALS: {}", credentials.getCredentials());
+		log.info("JWT: AUTHORITIES: {}", credentials.getAuthorities());
 
 		return getAuthenticationManager().authenticate(
 				new UsernamePasswordAuthenticationToken(
@@ -63,6 +70,7 @@ public final class JWTLoginFilter extends AbstractAuthenticationProcessingFilter
 											FilterChain chain,
 											Authentication auth)
 			throws IOException, ServletException {
+		log.debug("AUTHENTICATION SUCCESS: {}", auth);
 		tokenAuthService.addAuthentication(res, auth);
 	}
 }

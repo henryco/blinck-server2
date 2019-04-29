@@ -1,10 +1,11 @@
 package dev.tindersamurai.blinckserver.configuration.project.websocket;
 
 import dev.tindersamurai.blinckserver.security.token.service.TokenAuthenticationService;
+import lombok.val;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.ChannelInterceptorAdapter;
+import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,8 +16,7 @@ import static org.springframework.messaging.simp.stomp.StompCommand.CONNECT;
 /**
  * @author Henry on 08/09/17.
  */
-public class WebSocketAuthAdapter extends ChannelInterceptorAdapter
-		implements WebSocketConstants.Header {
+public class WebSocketAuthAdapter implements ChannelInterceptor, WebSocketConstants.Header {
 
 
 	private final TokenAuthenticationService tokenAuthService;
@@ -30,10 +30,8 @@ public class WebSocketAuthAdapter extends ChannelInterceptorAdapter
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
-		final StompHeaderAccessor accessor =
-				MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-
-		if (CONNECT == accessor.getCommand()) {
+		val accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+		if (accessor != null && CONNECT == accessor.getCommand()) {
 
 			final String username = checkUsername(accessor.getFirstNativeHeader(USERNAME));
 			final String jsonWebToken = checkToken(accessor.getFirstNativeHeader(ACCESS_TOKEN));
