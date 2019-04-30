@@ -19,8 +19,8 @@ public class SubMeeting {
 	private @JoinColumn(
 			name = "host_meeting_id"
 	) @ManyToOne(
-			fetch = LAZY,
-			cascade = ALL
+			cascade = ALL,
+			fetch = LAZY
 	) Meeting host;
 
 }

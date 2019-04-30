@@ -20,7 +20,7 @@ public class Chat {
 			name = "name"
 	) String name;
 
-	@ManyToMany
-	private List<UserProfile> users;
+	private @ManyToMany
+	List<UserProfile> users;
 
 }
