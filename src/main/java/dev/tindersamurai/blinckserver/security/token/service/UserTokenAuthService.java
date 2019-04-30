@@ -1,7 +1,6 @@
-package dev.tindersamurai.blinckserver.security.token.service.imp;
+package dev.tindersamurai.blinckserver.security.token.service;
 
 import dev.tindersamurai.blinckserver.security.token.processor.TokenAuthenticationProcessor;
-import dev.tindersamurai.blinckserver.security.token.service.TokenAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
