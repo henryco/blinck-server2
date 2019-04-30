@@ -1,5 +1,6 @@
 package dev.tindersamurai.blinckserver.mvc.data.entity.chat;
 
+import dev.tindersamurai.blinckserver.mvc.data.entity.user.UserProfile;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -31,4 +32,8 @@ public class ChatMessage {
 	private @ManyToOne @JoinColumn(
 			name = "chat_id"
 	) Chat chat;
+
+	private @JoinColumn(
+			name = "author_id"
+	) @ManyToOne UserProfile author;
 }

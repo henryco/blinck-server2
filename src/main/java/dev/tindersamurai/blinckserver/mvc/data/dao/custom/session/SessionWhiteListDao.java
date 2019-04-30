@@ -1,4 +1,4 @@
-package dev.tindersamurai.blinckserver.mvc.data.dao.session;
+package dev.tindersamurai.blinckserver.mvc.data.dao.custom.session;
 
 import dev.tindersamurai.blinckserver.mvc.data.entity.session.SessionWhiteList;
 

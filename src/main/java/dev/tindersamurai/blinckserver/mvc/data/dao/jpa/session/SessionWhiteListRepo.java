@@ -1,4 +1,4 @@
-package dev.tindersamurai.blinckserver.mvc.data.repository.session;
+package dev.tindersamurai.blinckserver.mvc.data.dao.jpa.session;
 
 import dev.tindersamurai.blinckserver.mvc.data.entity.session.SessionWhiteList;
 import org.springframework.data.jpa.repository.JpaRepository;

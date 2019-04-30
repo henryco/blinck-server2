@@ -1,7 +1,7 @@
 package dev.tindersamurai.blinckserver.mvc.service.social;
 
 import dev.tindersamurai.blinckserver.mvc.data.entity.user.*;
-import dev.tindersamurai.blinckserver.mvc.data.repository.user.UserProfileRepo;
+import dev.tindersamurai.blinckserver.mvc.data.dao.jpa.user.UserProfileRepo;
 import dev.tindersamurai.blinckserver.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

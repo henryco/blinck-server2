@@ -1,6 +1,6 @@
 package dev.tindersamurai.blinckserver.mvc.service.session;
 
-import dev.tindersamurai.blinckserver.mvc.data.dao.session.SessionWhiteListDao;
+import dev.tindersamurai.blinckserver.mvc.data.dao.custom.session.SessionWhiteListDao;
 import dev.tindersamurai.blinckserver.mvc.data.entity.session.SessionWhiteList;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;

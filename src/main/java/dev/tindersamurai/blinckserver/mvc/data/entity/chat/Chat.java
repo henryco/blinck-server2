@@ -20,7 +20,7 @@ public class Chat {
 			name = "name"
 	) String name;
 
-	@ManyToMany @JoinColumn(
-	) private List<UserProfile> users;
+	@ManyToMany
+	private List<UserProfile> users;
 
 }

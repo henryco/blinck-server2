@@ -1,0 +1,1 @@
+package dev.tindersamurai.blinckserver.mvc.data.dao.custom;

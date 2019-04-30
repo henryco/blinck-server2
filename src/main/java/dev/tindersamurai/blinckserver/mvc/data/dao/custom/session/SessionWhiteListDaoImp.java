@@ -1,7 +1,7 @@
-package dev.tindersamurai.blinckserver.mvc.data.dao.session;
+package dev.tindersamurai.blinckserver.mvc.data.dao.custom.session;
 
 import dev.tindersamurai.blinckserver.mvc.data.entity.session.SessionWhiteList;
-import dev.tindersamurai.blinckserver.mvc.data.repository.session.SessionWhiteListRepo;
+import dev.tindersamurai.blinckserver.mvc.data.dao.jpa.session.SessionWhiteListRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

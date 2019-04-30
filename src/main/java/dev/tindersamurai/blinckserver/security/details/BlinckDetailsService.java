@@ -1,6 +1,6 @@
 package dev.tindersamurai.blinckserver.security.details;
 
-import dev.tindersamurai.blinckserver.mvc.data.repository.user.UserProfileRepo;
+import dev.tindersamurai.blinckserver.mvc.data.dao.jpa.user.UserProfileRepo;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;

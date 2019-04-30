@@ -1,4 +1,4 @@
-package dev.tindersamurai.blinckserver.mvc.data.repository.user;
+package dev.tindersamurai.blinckserver.mvc.data.dao.jpa.user;
 
 import dev.tindersamurai.blinckserver.mvc.data.entity.user.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
