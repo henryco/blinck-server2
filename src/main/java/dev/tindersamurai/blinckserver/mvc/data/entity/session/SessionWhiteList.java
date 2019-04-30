@@ -4,7 +4,11 @@ import lombok.Data;
 
 import javax.persistence.*;
 
+import java.util.Date;
+
 import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.TemporalType.DATE;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 @Entity @Data
 public class SessionWhiteList {
@@ -25,4 +29,12 @@ public class SessionWhiteList {
 			nullable = false,
 			unique = true
 	) String token;
+
+	private @Column(
+			name = "created",
+			nullable = false,
+			updatable = false
+	) @Temporal(
+			value = TIMESTAMP
+	) Date created;
 }

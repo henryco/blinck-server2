@@ -7,6 +7,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Collection;
 
 /**
@@ -26,6 +27,7 @@ public class SessionWhiteListService implements ISessionWhiteListService {
 	public void addUserToWhiteList(Long userId, String token) {
 		if (!isUserInTheWhiteList(userId)) {
 			val session = new SessionWhiteList(); {
+				session.setCreated(Calendar.getInstance().getTime());
 				session.setUserId(userId);
 				session.setToken(token);
 			}
