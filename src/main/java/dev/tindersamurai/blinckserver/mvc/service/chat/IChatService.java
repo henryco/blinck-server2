@@ -1,6 +1,5 @@
 package dev.tindersamurai.blinckserver.mvc.service.chat;
 
-import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import java.util.Date;

@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 import java.util.Date;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.AUTO;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
@@ -29,11 +30,15 @@ public class ChatMessage {
 			TIMESTAMP
 	) Date date;
 
-	private @ManyToOne @JoinColumn(
+	private @ManyToOne(
+			cascade = ALL
+	) @JoinColumn(
 			name = "chat_id"
 	) Chat chat;
 
-	private @JoinColumn(
+	private @ManyToOne(
+			cascade = ALL
+	) @JoinColumn(
 			name = "author_id"
-	) @ManyToOne UserProfile author;
+	) UserProfile author;
 }

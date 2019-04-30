@@ -18,12 +18,16 @@ public class UserProfile {
 	@Embedded private PublicProfile publicProfile;
 	@Embedded private MediaProfile mediaProfile;
 
-	@OneToOne(cascade = ALL) @JoinColumn(
+	private @JoinColumn(
 			name = "social_id"
-	) private SocialProfile socialProfile;
+	) @OneToOne(
+			cascade = ALL
+	) SocialProfile socialProfile;
 
-	@OneToOne(cascade = ALL) @JoinColumn(
+	private @JoinColumn(
 			name = "auth_id"
-	) private AuthProfile authProfile;
+	) @OneToOne(
+			cascade = ALL
+	) AuthProfile authProfile;
 
 }
