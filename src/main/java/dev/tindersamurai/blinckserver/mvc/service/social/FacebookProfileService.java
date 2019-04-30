@@ -1,4 +1,4 @@
-package dev.tindersamurai.blinckserver.security.auth;
+package dev.tindersamurai.blinckserver.mvc.service.social;
 
 import dev.tindersamurai.blinckserver.mvc.data.entity.user.*;
 import dev.tindersamurai.blinckserver.mvc.data.repository.user.UserProfileRepo;
@@ -21,7 +21,7 @@ import static dev.tindersamurai.blinckserver.configuration.spring.WebMvcConfigur
 import static dev.tindersamurai.blinckserver.configuration.spring.WebMvcConfiguration.USER_IMAGE_POSTFIX;
 
 @Service @Slf4j
-public class FacebookProfileService {
+public class FacebookProfileService implements IFacebookProfileService {
 
 	private static final String FB_DATE_FORMAT = "MM/dd/yyyy";
 
@@ -32,14 +32,14 @@ public class FacebookProfileService {
 		this.userProfileRepo = userProfileRepo;
 	}
 
-	@Transactional
+	@Override @Transactional
 	public Long addNewFacebookUser(Facebook facebook, User userProfile) {
 		if (userProfileRepo.existsBySocialProfile_FacebookId(userProfile.getId()))
 			return userProfileRepo.getBySocialProfile_FacebookId(userProfile.getId()).getId();
 		return userProfileRepo.save(createNewUser(facebook, userProfile)).getId();
 	}
 
-	@Transactional
+	@Override @Transactional
 	public Long getUserIdFromFacebook(User userProfile) throws UsernameNotFoundException {
 		val profile = userProfileRepo.getBySocialProfile_FacebookId(userProfile.getId());
 		if (profile == null)

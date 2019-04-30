@@ -15,11 +15,14 @@ public class SessionWhiteList {
 
 	private @Column(
 			name = "user_id",
-			updatable = false
+			updatable = false,
+			nullable = false
 	) Long userId;
 
 	private @Column(
-			name = "admin_id",
-			updatable = false
-	) String adminId;
+			name = "token",
+			updatable = false,
+			nullable = false,
+			unique = true
+	) String token;
 }

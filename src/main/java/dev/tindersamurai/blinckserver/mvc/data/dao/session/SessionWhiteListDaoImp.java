@@ -20,23 +20,28 @@ public class SessionWhiteListDaoImp implements SessionWhiteListDao {
 	}
 
 	@Override @Transactional
-	public boolean isAdminSessionExists(String adminId) {
-		return whiteListRepo.existsByAdminId(adminId);
-	}
-
-	@Override @Transactional
-	public boolean isUserSessionExists(Long userId) {
+	public boolean isAnyUserSessionsExists(Long userId) {
 		return whiteListRepo.existsByUserId(userId);
 	}
 
 	@Override @Transactional
-	public void removeAdminSession(String adminId) {
-		whiteListRepo.deleteAllByAdminId(adminId);
+	public void removeAllUserSessions(Long userId) {
+		whiteListRepo.deleteAllByUserId(userId);
 	}
 
 	@Override @Transactional
-	public void removeUserSession(Long userId) {
-		whiteListRepo.deleteAllByUserId(userId);
+	public boolean isUserSessionExists(Long userId, String token) {
+		return whiteListRepo.existsByUserIdAndToken(userId, token);
+	}
+
+	@Override @Transactional
+	public boolean isSessionExists(String token) {
+		return whiteListRepo.existsByToken(token);
+	}
+
+	@Override @Transactional
+	public void removeSession(String token) {
+		whiteListRepo.deleteAllByToken(token);
 	}
 
 	@Override @Transactional

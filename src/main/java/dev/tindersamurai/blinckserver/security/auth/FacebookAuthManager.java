@@ -1,5 +1,6 @@
 package dev.tindersamurai.blinckserver.security.auth;
 
+import dev.tindersamurai.blinckserver.mvc.service.social.IFacebookProfileService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class FacebookAuthManager implements AuthenticationManager {
 	private @Value("blinck.facebook.app.secret") String app_secret;
 	private @Value("blinck.facebook.app.id") String app_id;
 
-	private final FacebookProfileService facebookProfileService;
+	private final IFacebookProfileService facebookProfileService;
 	private final UserDetailsService detailsService;
 
 
@@ -47,7 +48,7 @@ public class FacebookAuthManager implements AuthenticationManager {
 	public FacebookAuthManager(
 			@Qualifier("blinckDetailsService")
 					UserDetailsService detailsService,
-			FacebookProfileService facebookProfileService
+			IFacebookProfileService facebookProfileService
 	) {
 		this.facebookProfileService = facebookProfileService;
 		this.detailsService = detailsService;

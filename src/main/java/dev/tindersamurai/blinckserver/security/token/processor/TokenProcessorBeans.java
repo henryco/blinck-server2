@@ -1,7 +1,7 @@
 package dev.tindersamurai.blinckserver.security.token.processor;
 
 import dev.tindersamurai.blinckserver.configuration.BeansConfiguration;
-import dev.tindersamurai.blinckserver.security.token.service.SessionWhiteListService;
+import dev.tindersamurai.blinckserver.mvc.service.session.ISessionWhiteListService;
 import lombok.val;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,21 +16,22 @@ public class TokenProcessorBeans extends BeansConfiguration {
 	//todo: REPLACING WHITE LIST SESSION FOR THE SAME USER
 	
 	public @Bean TokenAuthenticationProcessor
-	userTokenPostProcessor(SessionWhiteListService whiteListService) {
+	userTokenPostProcessor(ISessionWhiteListService whiteListService) {
 
 		return new TokenAuthenticationProcessor() {
 
 			@Override
-			public Authentication processAuthentication(Authentication authentication) {
-				val name = Long.valueOf(authentication.getName());
-				if (!whiteListService.isUserInTheWhiteList(name))
+			public Authentication processAuthentication(Authentication authentication, String token) {
+				val userId = Long.valueOf(authentication.getName());
+				if (!whiteListService.isUserTokenInTheWhiteList(userId, token))
 					return null;
 				return authentication;
 			}
 
 			@Override
-			public void addAuthentication(Authentication authentication) {
-				whiteListService.addUserToWhiteList(Long.valueOf(authentication.getName()));
+			public void addAuthentication(Authentication authentication, String token) {
+				val userId = Long.valueOf(authentication.getName());
+				whiteListService.addUserToWhiteList(userId, token);
 			}
 
 		};

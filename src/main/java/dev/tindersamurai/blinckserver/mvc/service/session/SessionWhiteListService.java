@@ -1,4 +1,4 @@
-package dev.tindersamurai.blinckserver.security.token.service;
+package dev.tindersamurai.blinckserver.mvc.service.session;
 
 import dev.tindersamurai.blinckserver.mvc.data.dao.session.SessionWhiteListDao;
 import dev.tindersamurai.blinckserver.mvc.data.entity.session.SessionWhiteList;
@@ -13,7 +13,7 @@ import java.util.Collection;
  * @author Henry on 01/09/17.
  */
 @Service @Slf4j
-public class SessionWhiteListService {
+public class SessionWhiteListService implements ISessionWhiteListService {
 
 	private final SessionWhiteListDao whiteListDao;
 
@@ -22,40 +22,39 @@ public class SessionWhiteListService {
 		this.whiteListDao = whiteListDao;
 	}
 
-	public void addUserToWhiteList(Long userId) {
+	@Override
+	public void addUserToWhiteList(Long userId, String token) {
 		if (!isUserInTheWhiteList(userId)) {
-			val session = new SessionWhiteList();
-			session.setUserId(userId);
+			val session = new SessionWhiteList(); {
+				session.setUserId(userId);
+				session.setToken(token);
+			}
 			whiteListDao.save(session);
 		}
 	}
 
-	public void addAdminToWhiteList(String adminId) {
-		if (!isAdminInTheWhiteList(adminId)) {
-			val session = new SessionWhiteList();
-			session.setAdminId(adminId);
-			whiteListDao.save(session);
-		}
-	}
-
+	@Override
 	public void removeUserFromWhiteList(Long userId) {
 		if (isUserInTheWhiteList(userId))
-			whiteListDao.removeUserSession(userId);
+			whiteListDao.removeAllUserSessions(userId);
 	}
 
-	public void removeAdminFromWhiteList(String adminId) {
-		if (isAdminInTheWhiteList(adminId))
-			whiteListDao.removeAdminSession(adminId);
+	@Override
+	public void removeTokenFromWhiteList(String token) {
+		whiteListDao.removeSession(token);
 	}
 
+	@Override
 	public boolean isUserInTheWhiteList(Long userId) {
-		return whiteListDao.isUserSessionExists(userId);
+		return whiteListDao.isAnyUserSessionsExists(userId);
 	}
 
-	public boolean isAdminInTheWhiteList(String adminId) {
-		return whiteListDao.isAdminSessionExists(adminId);
+	@Override
+	public boolean isUserTokenInTheWhiteList(Long userId, String token) {
+		return whiteListDao.isUserSessionExists(userId, token);
 	}
 
+	@Override
 	public Collection<SessionWhiteList> getAllSessions() {
 		return whiteListDao.getAll();
 	}

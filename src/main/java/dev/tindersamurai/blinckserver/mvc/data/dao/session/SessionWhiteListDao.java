@@ -6,13 +6,15 @@ import java.util.Collection;
 
 public interface SessionWhiteListDao {
 
-	boolean isAdminSessionExists(String adminId);
+	boolean isAnyUserSessionsExists(Long userId);
 
-	boolean isUserSessionExists(Long userId);
+	void removeAllUserSessions(Long userId);
 
-	void removeAdminSession(String adminId);
+	boolean isUserSessionExists(Long userId, String token);
 
-	void removeUserSession(Long userId);
+	boolean isSessionExists(String token);
+
+	void removeSession(String token);
 
 	Collection<SessionWhiteList> getAll();
 

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import dev.tindersamurai.blinckserver.security.token.processor.TokenAuthenticationProcessor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +29,7 @@ import java.util.stream.Stream;
 
 /**
  * @author Henry on 23/08/17.
- */
+ */ @Slf4j
 public abstract class TokenAuthenticationService {
 
 
@@ -71,7 +72,7 @@ public abstract class TokenAuthenticationService {
 		val JWT = createAuthenticationToken(auth.getName(), stream.toArray(String[]::new));
 		res.addHeader(getTokenHeader(), getTokenPrefix() + " " + JWT);
 
-		if (getProcessor() != null) getProcessor().addAuthentication(auth);
+		if (getProcessor() != null) getProcessor().addAuthentication(auth, JWT);
 	}
 
 
@@ -93,9 +94,10 @@ public abstract class TokenAuthenticationService {
 			);
 
 			if (getProcessor() == null) return auth;
-			return getProcessor().processAuthentication(auth);
+			return getProcessor().processAuthentication(auth, jsonWebToken);
 
 		} catch (JwtException | NullPointerException e) {
+			log.error("Cannot process authentication for JWT: " + jsonWebToken, e);
 			return null;
 		}
 	}
@@ -108,8 +110,7 @@ public abstract class TokenAuthenticationService {
 			val payload = new TokenPayload(username, authorities);
 			return parseTo(new ObjectMapper().writeValueAsString(payload));
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			return parseTo(username);
+			throw new RuntimeException("Cannot create JWT string", e);
 		}
 	}
 
@@ -118,7 +119,7 @@ public abstract class TokenAuthenticationService {
 		try {
 			return new ObjectMapper().readValue(parseFrom(token), TokenPayload.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Error while reading authentication token", e);
 			return null;
 		}
 	}
@@ -149,7 +150,9 @@ public abstract class TokenAuthenticationService {
 			return Arrays.stream(authorities)
 					.map(SimpleGrantedAuthority::new)
 			.collect(Collectors.toList());
-		} catch (Exception ignored) { }
+		} catch (Exception e) {
+			log.error("Cannot grant authorities", e);
+		}
 		return defaultAuthorities();
 	}
 
