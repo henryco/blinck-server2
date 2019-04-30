@@ -1,5 +1,6 @@
 package dev.tindersamurai.blinckserver.configuration.spring;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,7 +12,7 @@ import static java.io.File.separator;
 /**
  * @author Henry on 23/08/17.
  */
-@Configuration
+@Configuration @Slf4j
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
 	public static final String REL_FILE_PATH = System.getProperty("user.dir");
@@ -34,7 +35,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 		registry.addResourceHandler("/abs/**")
 				.addResourceLocations("file:" + ABS_FILE_PATH + File.separator);
 
-		System.out.println(
+		log.info(
 				"\n***\n\n" +
 						"WORK DIR: "+REL_FILE_PATH+" \t[mapping: /rel/**" + "]\n" +
 						"HOME DIR: "+ABS_FILE_PATH+" \t[mapping: /abs/**" + "]\n"+

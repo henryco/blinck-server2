@@ -12,7 +12,7 @@ import java.io.Serializable;
 /**
  * Created by Ergin
  **/
-public class OffsetBasedPageRequest implements Pageable, Serializable {
+public final class OffsetBasedPageRequest implements Pageable, Serializable {
 
 	private static final long serialVersionUID = -25822477129613575L;
 
