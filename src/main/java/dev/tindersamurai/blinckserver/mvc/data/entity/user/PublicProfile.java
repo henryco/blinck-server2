@@ -23,7 +23,7 @@ public final class PublicProfile {
 	) String lastName;
 
 	private @Column(
-			name = "age",
+			name = "birthday",
 			nullable = false
 	) @Temporal(
 			DATE

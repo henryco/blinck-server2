@@ -81,7 +81,7 @@ import static org.springframework.http.HttpMethod.GET;
 	private HttpSecurity filterUserLoginRequest(HttpSecurity http) {
 		return http.addFilterBefore( // We filter the api/ USER login requests (if user will created if not exists)
 				new JWTLoginFilter(
-						"/login/user/**",
+						"/login/fb/**",
 						facebookAuthManager,
 						userTokenAuthService,
 						FacebookCredentials.class
