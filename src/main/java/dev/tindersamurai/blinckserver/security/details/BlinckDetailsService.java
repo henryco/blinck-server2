@@ -1,10 +1,10 @@
 package dev.tindersamurai.blinckserver.security.details;
 
 import dev.tindersamurai.blinckserver.mvc.data.dao.jpa.user.UserProfileRepo;
+import dev.tindersamurai.blinckserver.properties.SecurityAppProperties;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,12 +17,15 @@ import javax.persistence.EntityNotFoundException;
 public class BlinckDetailsService implements UserDetailsService {
 
 	private final UserProfileRepo userProfileRepo;
-	private final String default_role;
+	private final SecurityAppProperties securityProperties;
 
 	@Autowired
-	public BlinckDetailsService(UserProfileRepo userProfileRepo, Environment environment) {
-		this.default_role = environment.getProperty("blinck.security.default.role");
+	public BlinckDetailsService(
+			UserProfileRepo userProfileRepo,
+			SecurityAppProperties properties
+	) {
 		this.userProfileRepo = userProfileRepo;
+		this.securityProperties = properties;
 	}
 
 	@Override @Transactional
@@ -30,7 +33,7 @@ public class BlinckDetailsService implements UserDetailsService {
 		try {
 			val one = userProfileRepo.getOne(Long.valueOf(username));
 			log.info("ONE: {}", one);
-			return new BlinckUserDetails(username, one.getAuthProfile().isLocked(), default_role);
+			return new BlinckUserDetails(username, one.getAuthProfile().isLocked(), securityProperties.getDefaultRole());
 		} catch (EntityNotFoundException e) {
 			log.error("UserNotFound: " + username, e);
 			throw new UsernameNotFoundException(username, e);

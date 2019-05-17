@@ -1,11 +1,11 @@
 package dev.tindersamurai.blinckserver.security.auth;
 
 import dev.tindersamurai.blinckserver.mvc.service.social.IFacebookProfileService;
+import dev.tindersamurai.blinckserver.properties.FacebookAppProperties;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
-import org.springframework.social.connect.Connection;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
@@ -37,21 +36,21 @@ public class FacebookAuthManager implements AuthenticationManager {
 			"last_name", "middle_name", "locale", "location", "email"
 	};
 
-	private @Value("blinck.facebook.app.secret") String app_secret;
-	private @Value("blinck.facebook.app.id") String app_id;
-
 	private final IFacebookProfileService facebookProfileService;
 	private final UserDetailsService detailsService;
+	private final FacebookAppProperties props;
 
 
 	@Autowired
 	public FacebookAuthManager(
 			@Qualifier("blinckDetailsService")
 					UserDetailsService detailsService,
+			FacebookAppProperties facebookAppProperties,
 			IFacebookProfileService facebookProfileService
 	) {
 		this.facebookProfileService = facebookProfileService;
 		this.detailsService = detailsService;
+		this.props = facebookAppProperties;
 	}
 
 
@@ -62,9 +61,8 @@ public class FacebookAuthManager implements AuthenticationManager {
 		val facebook_uid = authentication.getPrincipal();
 		val facebook_token = authentication.getCredentials();
 
-		val factory = new FacebookConnectionFactory(app_id, app_secret);
-		Connection<Facebook> connection = factory.createConnection(new AccessGrant(facebook_token.toString()));
-		val facebook = connection.getApi();
+		val factory = new FacebookConnectionFactory(props.getAppId(), props.getAppSecret());
+		val facebook = factory.createConnection(new AccessGrant(facebook_token.toString())).getApi();
 		checkFacebook(facebook);
 
 

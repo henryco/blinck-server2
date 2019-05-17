@@ -18,6 +18,8 @@ public class SubMeeting {
 			strategy = AUTO
 	) Long id;
 
+
+
 	private @JoinColumn(
 			name = "host_meeting_id"
 	) @ManyToOne(

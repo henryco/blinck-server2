@@ -12,12 +12,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public final class FacebookCredentials extends JWTLoginCredentials {
 
-	@Getter
-	@Setter
+	@Getter @Setter
 	private String facebook_uid;
 
-	@Getter
-	@Setter
+	@Getter @Setter
 	private String facebook_token;
 
 	@Override

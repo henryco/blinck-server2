@@ -14,9 +14,9 @@ public class UserProfile {
 			strategy = AUTO
 	) Long id;
 
-	@Embedded private PrivateProfile privateProfile;
-	@Embedded private PublicProfile publicProfile;
-	@Embedded private MediaProfile mediaProfile;
+	private @Embedded PrivateProfile privateProfile;
+	private @Embedded PublicProfile publicProfile;
+	private @Embedded MediaProfile mediaProfile;
 
 	private @JoinColumn(
 			name = "social_id"
