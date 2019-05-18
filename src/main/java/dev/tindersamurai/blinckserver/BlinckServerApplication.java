@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableAsync
 @SpringBootApplication
-@EnableDiscoveryClient
 @Import({MainConfiguration.class})
 public class BlinckServerApplication {
 

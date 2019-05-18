@@ -1,17 +1,4 @@
 spring:
-  application:
-    name: blinck-backend
   cloud:
-    consul:
-      host: ${consul.address}
-      port: 8500
-      discovery:
-        tags: ${consul.tags}
-        enabled: false
-      config:
-        enabled: true
-        prefix: blinck
-        defaultContext: blinck-backend
-        data-key: properties
-        profileSeparator: '::'
-        format: yaml
+    config:
+      uri: https://consul.tindersamurai.dev
