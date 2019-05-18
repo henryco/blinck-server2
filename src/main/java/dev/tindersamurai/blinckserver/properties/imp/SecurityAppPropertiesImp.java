@@ -24,7 +24,7 @@ public class SecurityAppPropertiesImp implements SecurityAppProperties {
 
 	@NonNull @Override
 	public String getDefaultRole() {
-		return get("blinck.security.default.role");
+		return get("blinck.security.role.default");
 	}
 
 	@NonNull @Override
@@ -34,7 +34,7 @@ public class SecurityAppPropertiesImp implements SecurityAppProperties {
 
 	@NonNull @Override
 	public String getJwtTokenSecret() {
-		return get("blinck.security.jwt.secret.user");
+		return get("blinck.security.jwt.secret");
 	}
 
 	@NonNull @Override
