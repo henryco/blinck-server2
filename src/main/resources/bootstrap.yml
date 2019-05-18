@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: blinck
   cloud:
     config:
       uri: https://consul.tindersamurai.dev
